@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Famous Places Explorer</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+            }
+            header {
+                background-color: #333;
+                color: #fff;
+                padding: 15px;
+                text-align: center;
+            }
+            header h1 {
+                margin: 0;
+            }
+            #logoutButton {
+                background-color: transparent;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+            }
+            #logoutButton:hover {
+                background-color: #555;
+            }
+            section {
+                margin: 20px;
+            }
+            .search-form {
+                display: flex;
+                align-items: center;
+            }
+            .search-form input[type="text"] {
+                flex: 1;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .search-form button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-left: 10px;
+                transition: background-color 0.3s ease;
+            }
+            .search-form button:hover {
+                background-color: #0056b3;
+            }
+            .add-place-form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .add-place-form h2 {
+                margin-top: 0;
+            }
+            .add-place-form label {
+                font-weight: bold;
+            }
+            .add-place-form input[type="text"],
+            .add-place-form textarea {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                margin-top: 5px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+            .add-place-form button[type="submit"] {
+                padding: 10px 20px;
+                background-color: #28a745;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+            }
+            .add-place-form button[type="submit"]:hover {
+                background-color: #218838;
+            }
+            footer {
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 10px;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Famous Places Explorer</h1>
+            <button id="logoutButton" onclick="logout()">Logout</button>
+        </header>
+        <section class="search-form">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for a place..."
+            />
+            <button onclick="searchPlaces()">Search</button>
+        </section>
+        <section id="placesList">
+            <!-- Famous places will be displayed here -->
+        </section>
+        <section class="add-place-form">
+            <h2>Add a Famous Place</h2>
+            <form id="addPlaceForm">
+                <label for="country">Country:</label>
+                <input type="text" id="country" name="country" required />
+                <br />
+                <label for="name">Place Name:</label>
+                <input type="text" id="name" name="name" required />
+                <br />
+                <label for="about">About:</label>
+                <textarea id="about" name="about" required></textarea>
+                <br />
+                <button type="submit">Add Place</button>
+            </form>
+        </section>
+        <script>
+            var places = []; // This will hold the list of places
+
+            document
+                .getElementById("addPlaceForm")
+                .addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    var country = document.getElementById("country").value;
+                    var name = document.getElementById("name").value;
+                    var about = document.getElementById("about").value;
+                    var newPlace = {
+                        country: country,
+                        name: name,
+                        about: about,
+                    };
+                    places.push(newPlace);
+                    displayPlaces();
+                    document.getElementById("addPlaceForm").reset();
+                    alert("New place added!");
+                });
+
+            function displayPlaces() {
+                var placesList = document.getElementById("placesList");
+                placesList.innerHTML = ""; // Clear the list
+                places.forEach(function (place) {
+                    var div = document.createElement("div");
+                    div.className = "place";
+                    div.innerHTML =
+                        "<h3>" + place.name + "</h3><p>" + place.about + "</p>";
+                    placesList.appendChild(div);
+                });
+            }
+
+            function logout() {
+                // Here you would typically handle the logout process,
+                // like clearing user session data and redirecting to a login page.
+                alert("You have been logged out.");
+                // Redirect to login page
+                window.location.href = "login.html";
+            }
+
+            function searchPlaces() {
+                var searchInput = document
+                    .getElementById("searchInput")
+                    .value.toLowerCase();
+                var filteredPlaces = places.filter(function (place) {
+                    return (
+                        place.name.toLowerCase().includes(searchInput) ||
+                        place.country.toLowerCase().includes(searchInput) ||
+                        place.about.toLowerCase().includes(searchInput)
+                    );
+                });
+                displayFilteredPlaces(filteredPlaces);
+            }
+
+            function displayFilteredPlaces(filteredPlaces) {
+                var placesList = document.getElementById("placesList");
+                placesList.innerHTML = ""; // Clear the list
+                filteredPlaces.forEach(function (place) {
+                    var div = document.createElement("div");
+                    div.className = "place";
+                    div.innerHTML =
+                        "<h3>" + place.name + "</h3><p>" + place.about + "</p>";
+                    placesList.appendChild(div);
+                });
+            }
+        </script>
+    </body>
+</html>
